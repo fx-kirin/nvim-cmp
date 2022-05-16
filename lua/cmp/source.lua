@@ -108,14 +108,16 @@ source.get_entries = function(self, ctx)
     if not inputs[o] then
       inputs[o] = string.sub(ctx.cursor_before_line, o)
     end
-
-    local match = e:match(inputs[o], self:get_matching_config())
-    e.score = match.score
-    e.exact = false
-    if e.score >= 1 then
-      e.matches = match.matches
-      e.exact = e:get_filter_text() == inputs[o] or e:get_word() == inputs[o]
-      table.insert(entries, e)
+    
+    if inputs[o] ~= "." then
+        local match = e:match(inputs[o], self:get_matching_config())
+        e.score = match.score
+        e.exact = false
+        if e.score >= 1 then
+          e.matches = match.matches
+          e.exact = e:get_filter_text() == inputs[o] or e:get_word() == inputs[o]
+          table.insert(entries, e)
+        end
     end
   end
   self.cache:set({ 'get_entries', self.revision, ctx.cursor_before_line }, entries)
